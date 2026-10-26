@@ -1,0 +1,15 @@
+services:
+  backend:
+    volumes:
+      - ./backend:/src
+    environment:
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+    command: dotnet watch run --project Rudo.Api --urls http://0.0.0.0:5000
+
+  frontend:
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./app:/app
+      - /app/node_modules
