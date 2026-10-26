@@ -1,0 +1,44 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  redis:
+    image: redis:7-alpine
+
+  backend:
+    build: ./backend
+    env_file: .env
+    depends_on:
+      - sqlserver
+      - redis
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build: ./app
+    volumes:
+      - frontend_build:/app/dist
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - frontend_build:/usr/share/nginx/html:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  sqlserver_data:
+  frontend_build:
+
+networks:
+  default:
+    name: rudo_team_network
