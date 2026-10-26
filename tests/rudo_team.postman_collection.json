@@ -1,0 +1,9 @@
+{
+  "info": { "name": "Rudo.ai Team API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "item": [
+    {
+      "name": "Health check",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/health" }
+    }
+  ]
+}
